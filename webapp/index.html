@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice Thickness Measurement Tool</title>
+<meta name="description" content="Measure ice thickness from electron microscopy images: load multiple images, draw ROIs, pick a reference region I0, and get thickness = lambda * ln(I0 / Im).">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Ice Thickness Measurement Tool</h1>
+</header>
+
+<main>
+  <aside id="thumbs">
+    <div class="thumbs-head">
+      <span>Images</span>
+      <button id="addImagesBtn" class="mini" title="Add more images">+ Add</button>
+    </div>
+    <div id="thumbList"></div>
+    <p id="thumbsEmpty" class="hint">No images yet.<br>Click <b>+ Add</b> or upload below.</p>
+  </aside>
+
+  <div id="canvasWrap">
+    <canvas id="canvas"></canvas>
+    <div id="dropOverlay" class="hidden">
+      <div>Drop image(s) to load<br><small>PNG &middot; JPG &middot; TIFF &middot; multiple files OK</small></div>
+    </div>
+  </div>
+
+  <aside id="panel">
+    <section>
+      <button id="uploadBtn">Upload image(s)</button>
+      <p id="statusLine" class="status">No image loaded. Upload an image to begin.</p>
+      <p id="clipWarning" class="status warn hidden"></p>
+      <p class="hint">PNG / JPG / TIFF &mdash; images stay in your browser; nothing is sent to a server.</p>
+    </section>
+
+    <section>
+      <h2>Interactions</h2>
+      <ul class="hint-list">
+        <li><b>Right-drag</b> &mdash; draw a circular ROI</li>
+        <li><b>Left-drag</b> &mdash; pan &nbsp;&middot;&nbsp; <b>Wheel</b> &mdash; zoom</li>
+        <li><b>Click a circle</b> or a row below &mdash; set reference I&#8320;</li>
+        <li><b>Esc</b> &mdash; cancel an ROI being drawn</li>
+      </ul>
+      <button id="fitBtn" class="secondary">Fit image to window</button>
+      <p id="infoLine" class="status"></p>
+    </section>
+
+    <section>
+      <h2>Acceleration voltage</h2>
+      <label class="radio"><input type="radio" name="voltage" value="300" checked> 300 kV</label>
+      <label class="radio"><input type="radio" name="voltage" value="200"> 200 kV</label>
+    </section>
+
+    <section>
+      <details class="fold">
+        <summary>&lambda; settings (advanced)</summary>
+        <div class="fold-body">
+          <div class="lam-row"><label for="lamInput300">300 kV</label><input id="lamInput300" type="number" min="0" step="1" value="350"></div>
+          <div class="lam-row"><label for="lamInput200">200 kV</label><input id="lamInput200" type="number" min="0" step="1" value="300"></div>
+          <p class="hint">Changes apply to every image immediately.</p>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <h2>ROIs <span id="roiScope" class="scope"></span></h2>
+      <div id="roiList" class="roi-list"></div>
+      <div class="btn-row">
+        <button id="deleteLastBtn" class="secondary">Delete last</button>
+        <button id="deleteAllBtn" class="secondary">Delete all</button>
+      </div>
+      <p class="hint">Pick an empty hole or broken-grid area as I&#8320;. Other ROIs are measured relative to it.</p>
+    </section>
+
+    <section>
+      <h2>Result</h2>
+      <p class="avg-label">Average ice thickness (this image)</p>
+      <p id="avgValue" class="avg-value">&mdash;</p>
+      <div id="allImages" class="all-images"></div>
+      <button id="exportBtn">Export all images to CSV</button>
+      <p id="exportStatus" class="status"></p>
+    </section>
+  </aside>
+</main>
+
+<input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp" multiple hidden>
+<script src="vendor/pako.min.js"></script>
+<script src="vendor/utif.js"></script>
+<script src="detect.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

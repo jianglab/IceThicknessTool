@@ -1,0 +1,4 @@
+[submodule "LocalApp"]
+	path = LocalApp
+	url = https://github.com/SiduoLi2020/IceThickness-LocalApp.git
+	ignore = untracked

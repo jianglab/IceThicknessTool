@@ -1,0 +1,28 @@
+# PyInstaller: local install of the build tools, and build output.
+# Attach dist/IceThickness.exe to a GitHub Release instead of committing it.
+.pylibs/
+build/
+dist/
+*.spec
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node: ignore installed packages, but keep the hand-written pako shim
+# (node_modules/pako/index.js re-exports webapp/vendor/pako.min.js so that
+# UTIF.js can require("pako") in the Node tests).
+node_modules/*
+!node_modules/pako/
+
+# IDE / OS
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Loose screenshot in the project root
+/image (5).png
